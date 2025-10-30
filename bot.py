@@ -17,7 +17,8 @@ def webhook():
     bot.process_new_updates([update])
     return "OK", 200
 
-# ТелеБот функциялары
+
+# --- БОТ ФУНКЦИЯЛАРЫ ---
 @bot.message_handler(commands=['start'])
 def start(message):
     markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
@@ -34,6 +35,7 @@ def start(message):
         reply_markup=markup
     )
 
+
 @bot.message_handler(func=lambda message: True)
 def reply(message):
     if message.text == "📋 Қызмет түрлері":
@@ -43,9 +45,15 @@ def reply(message):
     else:
         bot.send_message(message.chat.id, "Төмендегі мәзірден таңдаңыз 👇")
 
+
+# --- SERVER CONFIG ---
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 10000))
-    WEBHOOK_URL = "https://medik244.onrender.com"  # 👈 МЫНАНЫ ӨЗ URL-МЕН АУЫСТЫРЫҢЫЗ
+    render_url = os.environ.get("RENDER_EXTERNAL_URL")
+    webhook_url = f"https://{render_url}/{TOKEN}"
+
     bot.remove_webhook()
-    bot.set_webhook(url=f"{WEBHOOK_URL}/{TOKEN}")
+    bot.set_webhook(url=webhook_url)
+
+    print(f"✅ Webhook орнатылды: {webhook_url}")
     app.run(host="0.0.0.0", port=port)
