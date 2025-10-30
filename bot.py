@@ -7,8 +7,8 @@ import openai
 # --- 🔹 Токендерді алу (Render environment-тен) ---
 TOKEN = os.getenv("TELEGRAM_TOKEN")
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
-
 openai.api_key = OPENAI_API_KEY
+
 bot = telebot.TeleBot(TOKEN)
 app = Flask(__name__)
 
@@ -101,6 +101,8 @@ def handle_ai(message):
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 10000))
     render_url = os.environ.get("RENDER_EXTERNAL_URL", "")
+    if not render_url:
+        print("❌ RENDER_EXTERNAL_URL жоқ!")
     if render_url.startswith("https://"):
         webhook_url = f"{render_url}/{TOKEN}"
     else:
