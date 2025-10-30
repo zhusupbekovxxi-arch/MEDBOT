@@ -4,11 +4,11 @@ from flask import Flask, request
 import os
 import openai
 
-# --- 🔹 Токендерді алу (Render environment-тен) ---
+# --- 🔹 Токендерді алу (Render Environment-тен) ---
 TOKEN = os.getenv("TELEGRAM_TOKEN")
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
-openai.api_key = OPENAI_API_KEY
 
+openai.api_key = OPENAI_API_KEY
 bot = telebot.TeleBot(TOKEN)
 app = Flask(__name__)
 
@@ -94,15 +94,13 @@ def handle_ai(message):
         answer = completion["choices"][0]["message"]["content"].strip()
         bot.send_message(message.chat.id, answer)
     except Exception as e:
-        print("OpenAI Error:", e)
+        print("❌ OpenAI Error:", e)  # Render логына шығару
         bot.send_message(message.chat.id, "⚠️ Кеңес алу сәтсіз. Кейінірек қайталап көріңіз.")
 
 # --- 🔹 Webhook орнату және қосу ---
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 10000))
     render_url = os.environ.get("RENDER_EXTERNAL_URL", "")
-    if not render_url:
-        print("❌ RENDER_EXTERNAL_URL жоқ!")
     if render_url.startswith("https://"):
         webhook_url = f"{render_url}/{TOKEN}"
     else:
